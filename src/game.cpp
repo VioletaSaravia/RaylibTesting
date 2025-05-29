@@ -19,6 +19,9 @@ global struct {
 } State;
 
 void Init() {
+    auto bla = Damped<v2>{};
+    auto bla = Damped<f32>{};
+    auto ble = Array<v2>(50);
     InitWindow(800, 450, "Hello world!");
     // DisableCursor();
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
@@ -26,15 +29,16 @@ void Init() {
 
     State.defaultShader = LoadShader(0, 0);
     State.testBlock     = LoadTexture("data/test_block.png");
-    State.guiCam           = {
-                  .offset = {400, 225},
-                  .target = {400, 225},
-                  .zoom   = 1.0f,
+    State.guiCam        = {
+               .offset = {400, 225},
+               .target = {400, 225},
+               .zoom   = 1.0f,
     };
     State.speed = 200.0f;
 }
 
 void Update() {
+    // TODO normalize vector
     if (IsKeyDown(KEY_A)) State.guiCam.offset.x += State.speed * GetFrameTime();
     if (IsKeyDown(KEY_W)) State.guiCam.offset.y += State.speed * GetFrameTime();
     if (IsKeyDown(KEY_S)) State.guiCam.offset.y -= State.speed * GetFrameTime();

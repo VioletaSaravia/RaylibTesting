@@ -2,6 +2,7 @@
 #include <raylib/raylib.h>
 
 #define RAYGUI_IMPLEMENTATION
+#include <concepts>
 #include <cstdint>
 #include <raylib/raygui.h>
 
@@ -42,3 +43,44 @@ struct v2i {
 #define global static
 #define internal static
 #define persist static
+
+template <typename T>
+concept VectorType = requires(f32 scalar, T t) {
+    { scalar * t } -> std::same_as<T>;
+};
+
+template <VectorType T>
+struct Damped {
+    T _y;
+};
+
+template <typename T>
+struct Array {
+    T  *data;
+    u32 count, len;
+
+    Array<T>(u32 _len) : len{_len}, count{0}, data{malloc(sizeof(T) * _len)} {};
+    Push(T val) {
+        if (count + 1 > len) return;
+        data[count++] = val;
+    }
+    Reset() { count = 0; }
+    T Pop() {
+        if (count == 0) return;
+        count--;
+        return data[count + 1];
+    }
+};
+
+struct Arena {
+    u8 *data;
+    u32 used, size;
+
+    u8 *Alloc(u32 _size) {
+        if (used + _size >= size) return nullptr;
+
+        u8 *result = &data[used];
+        used += _size;
+        return result;
+    }
+};
