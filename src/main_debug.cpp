@@ -33,6 +33,7 @@ int main() {
         CloseHandle(hFile);
         return 1;
     }
+    printf("BLA");
 
     AppDll.Init();
     while (!AppDll.WindowShouldClose()) {

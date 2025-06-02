@@ -12,48 +12,50 @@ struct DampedCamera2D : Camera2D {
 };
 
 global struct {
-    Camera2D guiCam;
+    Camera2D cam;
     Shader   defaultShader;
     Texture  testBlock;
     f32      speed;
 } State;
 
+void AddKeybind(Action action, Keybind keybind, u32 slot = 0) {
+    Mappings[action][slot] = keybind;
+}
+
+void RemoveKeybind(Action action, u32 slot) {
+    Mappings[action][slot].source = ::None;
+}
+
 void Init() {
-    auto bla = Damped<v2>{};
-    auto bla = Damped<f32>{};
-    auto ble = Array<v2>(50);
     InitWindow(800, 450, "Hello world!");
     // DisableCursor();
     SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
-    SetConfigFlags(FLAG_MSAA_4X_HINT);
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT);
 
     State.defaultShader = LoadShader(0, 0);
     State.testBlock     = LoadTexture("data/test_block.png");
-    State.guiCam        = {
-               .offset = {400, 225},
-               .target = {400, 225},
-               .zoom   = 1.0f,
+    State.cam           = {
+                  .offset = {400, 225},
+                  .target = {400, 225},
+                  .zoom   = 1.0f,
     };
     State.speed = 200.0f;
 }
 
 void Update() {
-    // TODO normalize vector
-    if (IsKeyDown(KEY_A)) State.guiCam.offset.x += State.speed * GetFrameTime();
-    if (IsKeyDown(KEY_W)) State.guiCam.offset.y += State.speed * GetFrameTime();
-    if (IsKeyDown(KEY_S)) State.guiCam.offset.y -= State.speed * GetFrameTime();
-    if (IsKeyDown(KEY_D)) State.guiCam.offset.x -= State.speed * GetFrameTime();
-    if (IsKeyPressed(KEY_E)) State.guiCam.zoom *= 2.0f;
-    if (IsKeyPressed(KEY_Q)) State.guiCam.zoom /= 2.0f;
-
+    if (IsActionDown(Action::MoveRight)) printf("Actions work?\n");
     BeginDrawing();
     {
         ClearBackground(RAYWHITE);
         DrawFPS(10, 10);
 
-        BeginMode2D(State.guiCam);
+        BeginMode2D(State.cam);
         {
-            DrawTexture(State.testBlock, 100, 100, WHITE);
+            for (u32 i = 0; i < Action::ActionCount; i++) {
+                GuiButton({0, (f32)i * 50, 40, 40}, TextFormat("Action: %d", i));
+                GuiButton({50, (f32)i * 50, 40, 40}, TextFormat("%d", Mappings[i][0].source));
+                GuiButton({100, (f32)i * 50, 40, 40}, TextFormat("%d", Mappings[i][1].source));
+            }
         }
         EndMode2D();
     }
