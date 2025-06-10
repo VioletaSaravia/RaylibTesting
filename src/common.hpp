@@ -1,5 +1,6 @@
 #pragma once
 #include <raylib/raylib.h>
+#include <raylib/raymath.h>
 
 #define RAYGUI_IMPLEMENTATION
 #include <concepts>
@@ -8,34 +9,45 @@
 
 // ===== MATH =====
 
-using i8   = int8_t;
-using i16  = int16_t;
-using i32  = int32_t;
-using i64  = int64_t;
-using u8   = uint8_t;
-using u16  = uint16_t;
-using u32  = uint32_t;
-using u64  = uint64_t;
-using f32  = float_t;
-using f64  = double_t;
-using cstr = char *;
+using i8     = int8_t;
+using i16    = int16_t;
+using i32    = int32_t;
+using i64    = int64_t;
+using u8     = uint8_t;
+using u16    = uint16_t;
+using u32    = uint32_t;
+using u64    = uint64_t;
+using f32    = float_t;
+using f64    = double_t;
+using cstr   = char *;
+using constr = const char *;
 
 using v2   = Vector2;
 using v3   = Vector3;
 using v4   = Vector4;
 using mat4 = Matrix;
 
-v2 operator+(v2 lhs, v2 rhs) {
-    return v2{lhs.x + rhs.x, lhs.y + rhs.y};
+f32 RandF() {
+    return static_cast<f32>(GetRandomValue(0, INT_MAX)) / static_cast<f32>(INT_MAX);
 }
-v2 operator-(v2 lhs, v2 rhs) {
-    return v2{lhs.x - rhs.x, lhs.y - rhs.y};
+
+f32 wrap(f32 val, f32 to) {
+    return val < 0.0f ? fmodf(val + to, to) : fmodf(val, to);
+}
+
+v2 operator%(v2 lhs, v2 rhs) {
+    return v2{wrap(lhs.x, rhs.x), wrap(lhs.y, rhs.y)};
+}
+v2 &operator%=(v2 &lhs, v2 rhs) {
+    lhs.x = wrap(lhs.x, rhs.x);
+    lhs.y = wrap(lhs.y, rhs.y);
+    return lhs;
 }
 v2 operator*(f32 lhs, v2 rhs) {
     return v2{lhs * rhs.x, lhs * rhs.y};
 }
-v2 operator*(v2 lhs, f32 rhs) {
-    return v2{rhs * lhs.x, rhs * lhs.y};
+v2 operator/(f32 lhs, v2 rhs) {
+    return v2{lhs / rhs.x, lhs / rhs.y};
 }
 
 struct v2i {
@@ -57,6 +69,11 @@ struct Damped {
 };
 
 // ===== MEMORY =====
+
+template <typename E>
+constexpr u32 EnumCount() {
+    return static_cast<int>(E::Count);
+}
 
 template <typename T>
 struct Array {
@@ -130,6 +147,7 @@ global Keybind Mappings[Action::ActionCount][MaxKeybinds] = {
      {.source = ::Pad1, .pad = {.btns = {GAMEPAD_BUTTON_RIGHT_FACE_RIGHT}}}}, // Cancel
 };
 
+// TODO templated singleton mappings
 
 bool IsActionDown(Action action) {
     auto mapping = Mappings[action];
@@ -301,4 +319,10 @@ bool IsActionReleased(Action action) {
     }
 
     return false;
+}
+
+void DrawMsPF(int x, int y) {
+    persist f32 mspf = GetFrameTime() * 1000.0f;
+    if (fmod(GetTime(), 1.0) < 0.1) mspf = GetFrameTime() * 1000.0f;
+    DrawText(TextFormat("%.2f MsPF", mspf), x, y, 20, DARKGREEN);
 }

@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "concepts": "cpp"
+        "concepts": "cpp",
+        "xtr1common": "cpp",
+        "cfloat": "cpp",
+        "utility": "cpp",
+        "tuple": "cpp",
+        "cstdint": "cpp"
     }
 }
