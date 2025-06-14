@@ -8,10 +8,10 @@
             "name": "(Windows) Debug Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/debug/main_debug.exe",
+            "program": "${fileDirname}/build/debug/main_debug.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${fileDirname}",
             "environment": [],
             "console": "integratedTerminal",
             "preLaunchTask": "C/C++: cl.exe build main_debug.exe",
@@ -20,13 +20,13 @@
             "name": "(Windows) Release Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/win32/main.exe",
+            "program": "${fileDirname}/build/win32/main.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${fileDirname}",
             "environment": [],
             "console": "integratedTerminal",
-            "preLaunchTask": "C/C++: cl.exe build main.exe"
+            "preLaunchTask": "C/C++: cl.exe build main.exe",
         }
     ]
 }

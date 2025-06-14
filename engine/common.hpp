@@ -147,6 +147,14 @@ global Keybind Mappings[Action::ActionCount][MaxKeybinds] = {
      {.source = ::Pad1, .pad = {.btns = {GAMEPAD_BUTTON_RIGHT_FACE_RIGHT}}}}, // Cancel
 };
 
+void AddKeybind(Action action, Keybind keybind, u32 slot = 0) {
+    Mappings[action][slot] = keybind;
+}
+
+void RemoveKeybind(Action action, u32 slot) {
+    Mappings[action][slot].source = ::None;
+}
+
 // TODO templated singleton mappings
 
 bool IsActionDown(Action action) {
@@ -321,8 +329,12 @@ bool IsActionReleased(Action action) {
     return false;
 }
 
-void DrawMsPF(int x, int y) {
+void DrawMsPF(i32 x, i32 y) {
     persist f32 mspf = GetFrameTime() * 1000.0f;
     if (fmod(GetTime(), 1.0) < 0.1) mspf = GetFrameTime() * 1000.0f;
     DrawText(TextFormat("%.2f MsPF", mspf), x, y, 20, DARKGREEN);
+}
+
+void DrawMsPF(v2i xy) {
+    DrawMsPF(xy.x, xy.y);
 }

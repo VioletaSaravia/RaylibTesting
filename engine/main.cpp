@@ -1,4 +1,4 @@
-#include "game.cpp"
+#include "../games/template/main.cpp"
 
 int main() {
     Init();

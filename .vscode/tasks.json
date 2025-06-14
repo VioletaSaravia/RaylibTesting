@@ -8,8 +8,9 @@
             "type": "shell",
             "command": "${workspaceFolder}\\build.bat",
             "args": [
+                "${fileDirnameBasename}",
                 "win32",
-                "debug"
+                "debug",
             ],
             "group": {
                 "kind": "build",
@@ -25,7 +26,9 @@
             "type": "shell",
             "command": "${workspaceFolder}\\build.bat",
             "args": [
-                "win32"
+                "${fileDirnameBasename}",
+                "win32",
+                "release"
             ],
             "group": {
                 "kind": "build",
